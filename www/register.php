@@ -77,14 +77,14 @@
 
         $("#formSend").on("click", function() {
             var Form = {};
-
             var email = form.find("input[name='userEmail']");
             var pass = form.find("input[name='userPass']");
             Form.email = Validation.email(event, email);
             Form.pass = Validation.pass(event, pass);
-
             for(cur in Form) {
-                if (!Form[cur]) return false;
+                if (!Form[cur]){
+                    return false;
+                }
             }
             return true;
         });
