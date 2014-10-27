@@ -29,23 +29,28 @@
         pass: function(e, obj) {
             var object = (obj == undefined) ? this:obj;
             var reg = /^\w{6,50}$/;
-            Validation.compareReg(reg, object);
+            return Validation.compareReg(reg, object);
         },
-        confPass: function() {
+        confPass: function(e, obj) {
+            var object = (obj == undefined) ? this:obj;
             var pass = $('#formRegister input[name="userPass"]');
-            if(pass.val() == $(this).val()) {
-                $(this).parent('div').removeClass('has-error').addClass('has-success');
-                $(this).siblings('p').css({"display": "block", "color": ""}).addClass('text-success').text("Пароли совпадают ^_^");
+            if(pass.val() == $(object).val()) {
+                $(object).parent('div').removeClass('has-error').addClass('has-success');
+                $(object).siblings('p').css({"display": "block", "color": ""}).addClass('text-success').text("Пароли совпадают ^_^");
+                return true;
             }else {
-                $(this).parent("div").removeClass('has-success').addClass('has-error');
-                $(this).siblings('p').css({"display": "block", "color": "#f00"}).text("Пароли не совпадают!!!!");
+                $(object).parent("div").removeClass('has-success').addClass('has-error');
+                $(object).siblings('p').css({"display": "block", "color": "#f00"}).text("Пароли не совпадают!!!!");
+                return false;
             }
         },
         name: function() {
 
         },
-        birthday: function() {
-
+        birthday: function(e, obj) {
+            var reg = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+            var object = (obj == undefined) ? this:obj;
+            return Validation.compareReg(reg, object);
         },
         phone: function() {
 
@@ -54,6 +59,12 @@
 
 
     $(document).ready(function() {
+        $('#datetimepicker').datetimepicker({
+            language: 'ru',
+            format: "YYYY-MM-DD",
+            pickTime: false
+        });
+
         $('#tooltip').tooltip();
         $('#popover').popover();
 
@@ -71,18 +82,24 @@
         form.find("input[name='userEmail']").on('blur', Validation.email);
         form.find("input[name='userPass']").on('blur', Validation.pass);
         form.find("input[name='userPassConfirm']").on('blur', Validation.confPass);
-
-
+        form.find("input[name='userBDay']").on('blur', Validation.birthday);
 
 
         $("#formSend").on("click", function() {
             var Form = {};
+
             var email = form.find("input[name='userEmail']");
             var pass = form.find("input[name='userPass']");
+            var confP = form.find("input[name='userPassConfirm']");
+            var bd = form.find("input[name='userBDay']");
             Form.email = Validation.email(event, email);
             Form.pass = Validation.pass(event, pass);
+            Form.confPas = Validation.confPass(event, confP);
+            Form.bd = Validation.birthday(event, bd);
             for(cur in Form) {
+
                 if (!Form[cur]){
+                    console.log(cur);
                     return false;
                 }
             }
@@ -133,7 +150,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">День рождения</label>
-                                    <input type="text" class="form-control" name="userBDay" placeholder="День рождения" />
+                                    <input id="datetimepicker" type="text" class="form-control" name="userBDay" placeholder="День рождения" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Телефон</label>

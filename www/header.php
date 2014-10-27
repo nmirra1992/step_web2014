@@ -16,17 +16,10 @@ if(!empty($_SESSION['userInfo']))
     $login = $user->getName();
 }
 
-
 switch($userLogin){
     case 1:
-        $formShow = '<form class="navbar-form navbar-right" action="autorizetion.php" method="POST">
-                <div class="form-group">
-                    <input style="width:150px;" class="form-control" name="login" type="text" placeholder="Логин" />
-                </div>
-                <div class="form-group">
-                    <input style="width:150px;" class="form-control" name="pass" type="password" placeholder="Пароль" />
-                </div>
-                <button type="submit" class="btn btn-success">Войти</button>
+        $formShow = '<form class="navbar-form navbar-right" >
+                <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-default">Войти</button>
             </form>';
         break;
     case 2:
@@ -60,8 +53,12 @@ $menu = array(
     <meta charset="utf-8">
     <title>CMS - new best ;)</title>
     <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-datetimepicker.css">
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/moment-with-langs.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datetimepicker.ru.js"></script>
     <style type="text/css">
         .up {
             margin-top: 50px;
@@ -115,6 +112,34 @@ $menu = array(
     </style>
 </head>
 <body>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Войти на сайт</h4>
+            </div>
+            <div class="modal-body">
+                <form id="loginFromModal" action="autorizetion.php" method="POST">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input name="login" type="email" class="form-control" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input name="pass" type="password" class="form-control" placeholder="Password">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button form="loginFromModal" type="submit" class="btn btn-primary">Enter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- navigation bar -->
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
