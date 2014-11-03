@@ -7,7 +7,6 @@
     $email = clearData($_POST['email']);
 
     $sql = "SELECT email FROM cms_users WHERE email='{$email}'";
-    //echo($sql);
 
     $res = mysql_query($sql) or die("bad arg!");
 
