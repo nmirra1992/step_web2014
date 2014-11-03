@@ -9,7 +9,6 @@
                 data: {email: $(email).val()},
                 dataType: "html",
                 success: function(respData) {
-                    console.log(respData);
                     if(respData == 'busy'){
                         $(email).siblings("p.help-block").css({"display":"block", "color": "red"}).text("Email is busy!");
                         setBadValid(email);
@@ -39,23 +38,16 @@
     var Validation = {
         compareReg: function(reg, obj) {
             if(reg.test($(obj).val())) {
-                //console.log('ok');
                 $(obj).parent('div').removeClass('has-error').addClass('has-success');
                 $(obj).siblings('span.glyphicon').addClass('glyphicon-ok').removeClass('glyphicon-remove');
                 return true;
             }else {
-                //console.log($(obj).siblings('span.glyphicon'));
                 $(obj).parent("div").removeClass('has-success').addClass('has-error');
                 $(obj).siblings('span.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
                 return false;
             }
         },
         email: function(e, obj) {
-            /*console.log("THIS = " + this);
-            console.log(this);
-            console.log(e);
-            console.log(obj);*/
-
             var object = (obj == undefined) ? this:obj;
             var reg = /^[A-Za-z0-9_\.]{1,}@[A-Za-z0-9_\.]{1,}$/;
             var flag = Validation.compareReg(reg, object);
