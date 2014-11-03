@@ -3,6 +3,25 @@
 ?>
 
 <script type="text/javascript">
+    function validBD(obj) {
+        var reg = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+        var object = (obj == undefined) ? this:obj;
+        return compareReg(reg, object);
+    }
+
+    function compareReg(reg, obj) {
+        if(reg.test($(obj).val())) {
+            //console.log('ok');
+            $(obj).parent('div').removeClass('has-error').addClass('has-success');
+            $(obj).siblings('span.glyphicon').addClass('glyphicon-ok').removeClass('glyphicon-remove');
+            return true;
+        }else {
+            //console.log($(obj).siblings('span.glyphicon'));
+            $(obj).parent("div").removeClass('has-success').addClass('has-error');
+            $(obj).siblings('span.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            return false;
+        }
+    }
 
     $(document).ready(function() {
 
@@ -17,6 +36,17 @@
                 });
                 $("#btnSave").slideDown();
                 $(this).attr("disabled", "disabled");
+            }
+        });
+
+        $("#btnSave").on({
+            click: function() {
+                var bd = $("#userInfoForm").find("input[name='userBDay']");
+                var flag = validBD(bd);
+                if (!flag){
+                    return false;
+                }
+                $("#userInfoForm").submit();
             }
         });
     });

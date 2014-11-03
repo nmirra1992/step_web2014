@@ -1,9 +1,9 @@
 <?php
 session_start();
 include_once "func.php";
-
+//var_dump($_SESSION);
 if($_SERVER['REQUEST_METHOD'] == "POST") {
-    if(!empty($_SESSION['login']) ) {
+    if(!empty($_SESSION['userInfo']) ) {
         $conn = mysql_connect("localhost", "root", "") or die("no connection to DB");
         mysql_select_db("cms_project") or die("no DB");
 
@@ -14,25 +14,28 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
             'info' => clearData($_POST['userInfo']),
         );
 
+        $userS = unserialize($_SESSION['userInfo']);
+
         $sql = "UPDATE cms_users SET
                     name='{$user['name']}',
                     phone='{$user['phone']}',
                     birthday='{$user['birthday']}',
                     info='{$user['info']}'
-                      WHERE email='{$_SESSION['login']}'";
+                      WHERE email='{$userS->getEmail()}'";
 
 
         $flag = mysql_query($sql) or die("false insert data!");
 
         if($flag) {
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['info'] = $user['info'];
-            $_SESSION['birthday'] = $user['birthday'];
-            $_SESSION['phone'] = $user['phone'];
+            $userS->setName($user['name']);
+            $userS->setBirthday($user['birthday']);
+            $userS->setPhone($user['phone']);
+            $userS->setInfo($user['info']);
+
+            $_SESSION['userInfo'] = serialize($userS);
         }
 
         mysql_close($conn);
-
     }
 }
 
