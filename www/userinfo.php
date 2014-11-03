@@ -11,12 +11,10 @@
 
     function compareReg(reg, obj) {
         if(reg.test($(obj).val())) {
-            //console.log('ok');
             $(obj).parent('div').removeClass('has-error').addClass('has-success');
             $(obj).siblings('span.glyphicon').addClass('glyphicon-ok').removeClass('glyphicon-remove');
             return true;
         }else {
-            //console.log($(obj).siblings('span.glyphicon'));
             $(obj).parent("div").removeClass('has-success').addClass('has-error');
             $(obj).siblings('span.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
             return false;
