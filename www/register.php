@@ -1,60 +1,48 @@
 <script type="text/javascript">
-    function ajaxCheckEmail(obj) {
-        if($(obj).val() != '') {
-            var email = obj;
-            $.ajax({
-                async: false,
-                url:  "email_check_ajax.php",
-                type: "POST",
-                data: {email: $(email).val()},
-                dataType: "html",
-                success: function(respData) {
-                    if(respData == 'busy'){
-                        $(email).siblings("p.help-block").css({"display":"block", "color": "red"}).text("Email is busy!");
-                        setBadValid(email);
-                        email = false;
-                    }else {
-                        $(email).siblings("p.help-block").css({"display":"block", "color": "green"}).text("Email is free!");
-                        setOkValid(email);
-                        email = true;
-                    }
-                }
-            });
-            return email;
-        }
-        return false;
-    }
-
-    function setOkValid(obj) {
-        $(obj).parent('div').removeClass('has-error').addClass('has-success');
-        $(obj).siblings('span.glyphicon').addClass('glyphicon-ok').removeClass('glyphicon-remove');
-    }
-    function setBadValid(obj) {
-        $(obj).parent("div").removeClass('has-success').addClass('has-error');
-        $(obj).siblings('span.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
-    }
-
-
     var Validation = {
         compareReg: function(reg, obj) {
             if(reg.test($(obj).val())) {
+                //console.log('ok');
                 $(obj).parent('div').removeClass('has-error').addClass('has-success');
                 $(obj).siblings('span.glyphicon').addClass('glyphicon-ok').removeClass('glyphicon-remove');
                 return true;
             }else {
+                //console.log($(obj).siblings('span.glyphicon'));
                 $(obj).parent("div").removeClass('has-success').addClass('has-error');
                 $(obj).siblings('span.glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
                 return false;
             }
         },
         email: function(e, obj) {
+
             var object = (obj == undefined) ? this:obj;
             var reg = /^[A-Za-z0-9_\.]{1,}@[A-Za-z0-9_\.]{1,}$/;
-            var flag = Validation.compareReg(reg, object);
+           var flag = Validation.compareReg(reg, object);
+            if(flag){
+                $.ajax({
+                    async: false,
+                    url: "email_check_ajax.php",
+                    type: "POST",
+                    data: {email: $(object).val() },
+                    success: function (respData) {
+                        if(respData=='busy'){
+                            $(object).siblings('p.help-block').css({'display':"block"}).text("This email is busy");
+                               flag=true;}
+                        else{
+                            $(object).siblings('p.help-block').css({'display':"block"}).text("This email is Ok");
+                            flag=false;
+                        }
 
-            flag = (!flag) ?  false : (ajaxCheckEmail(object)) ? true : false;
-            console.log(flag);
-            return flag;
+                    }
+                    });
+                return flag;
+            }
+
+            else{
+                return false;
+            }
+
+
         },
         login: function() {
 
@@ -92,7 +80,9 @@
 
 
     $(document).ready(function() {
-        $('#datetimepicker').datetimepicker({
+
+
+    $('#datetimepicker').datetimepicker({
             language: 'ru',
             format: "YYYY-MM-DD",
             pickTime: false
@@ -154,7 +144,7 @@
                             <form id="formRegister" method="POST" action="register_handl.php">
                                 <div class="form-group has-feedback">
                                     <label class="control-label"><span class="text-danger">*</span>Email</label>
-                                    <input id="emailU" type="text" class="form-control" name="userEmail" placeholder="Email"  />
+                                    <input type="text" class="form-control" name="userEmail" id="uEmail" placeholder="Email"  />
                                     <span class="glyphicon form-control-feedback"></span>
                                     <p style="display: none;" class="help-block"></p>
                                 </div>
